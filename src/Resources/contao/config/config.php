@@ -26,7 +26,7 @@ $GLOBALS['TL_CONFIG']['hyphenator_skipPages']  = [];
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['modifyFrontendPage'][] = ['huh.hyphenator.frontend', 'modifyFrontendPage'];
+$GLOBALS['TL_HOOKS']['modifyFrontendPage'][] = ['huh.hyphenator.frontendPageListener', 'modifyFrontendPage'];
 
 /**
  * Css

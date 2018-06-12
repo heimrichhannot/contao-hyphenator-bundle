@@ -11,6 +11,7 @@ namespace HeimrichHannot\HyphenatorBundle\Hyphenator;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\StringUtil;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
 class FrontendHyphenator
@@ -56,7 +57,7 @@ class FrontendHyphenator
 
         // mask esi tags, otherwise dom crawler will remove them
         $strBuffer = preg_replace_callback('#<esi:((?!\/>).*)\s?\/>#sU', function ($matches) {
-            return '####esi:open####'.str_replace('"', '#~~~#', \Contao\StringUtil::specialchars($matches[1])).'####esi:close####';
+            return '####esi:open####'.str_replace('"', '#~~~#', StringUtil::specialchars($matches[1])).'####esi:close####';
         }, $strBuffer);
 
         $doc = HtmlPageCrawler::create($strBuffer);
@@ -78,7 +79,7 @@ class FrontendHyphenator
                 $text = current($text);
             }
 
-            $node->html($text);
+            $node->html(StringUtil::decodeEntities($text));
 
             return $node;
         });
@@ -86,7 +87,7 @@ class FrontendHyphenator
         $strBuffer = $doc->saveHTML();
 
         $strBuffer = preg_replace_callback('/####esi:open####(.*)####esi:close####/', function ($matches) {
-            return '<esi:'.str_replace('#~~~#', '"', \Contao\StringUtil::decodeEntities($matches[1])).'/>';
+            return '<esi:'.str_replace('#~~~#', '"', StringUtil::decodeEntities($matches[1])).'/>';
         }, $strBuffer);
 
         return $strBuffer;
