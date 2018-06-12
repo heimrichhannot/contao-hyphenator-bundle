@@ -1,0 +1,8 @@
+body {
+    /*
+    &shy; fix for safari if used webfonts and at least one ligature on the same line
+    https://github.com/mnater/Hyphenator/issues/239#issuecomment-148959342
+    */
+    -webkit-font-variant-ligatures: no-common-ligatures;
+    font-variant-ligatures: no-common-ligatures;
+}

@@ -1,0 +1,63 @@
+{
+    "name": "heimrichhannot/contao-hyphenator-bundle",
+    "description": "Word-Hyphenation for the contao content-management-system.",
+    "keywords": [
+        "contao",
+        "hyphen",
+        "hyphenator"
+    ],
+    "type": "contao-bundle",
+    "homepage": "https://github.com/heimrichhannot/contao-hyphenator-bundle",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Heimrich & Hannot",
+            "email": "digitales@heimrich-hannot.de",
+            "homepage": "http://www.heimrich-hannot.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/heimrichhannot/contao-hyphenator-bundle/issues"
+    },
+    "require": {
+        "php": "^7.1",
+        "contao/core-bundle": "^4.4",
+        "symfony/framework-bundle": "^3.4",
+        "org_heigl/hyphenator": "^2.3",
+        "wa72/htmlpagedom": "^1.3",
+        "heimrichhannot/contao-utils-bundle": "^2.16"
+    },
+    "require-dev": {
+        "contao/test-case": "^1.1",
+        "contao/manager-plugin": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.2",
+        "phpunit/phpunit": ">=6.0 <6.5",
+        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/message-factory": "^1.0.2",
+        "php-coveralls/php-coveralls": "^2.0",
+        "symfony/phpunit-bridge": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "HeimrichHannot\\HyphenatorBundle\\": "src/"
+        },
+        "classmap": [
+            "src/"
+        ],
+        "exclude-from-classmap": [
+            "src/Resources/contao/config/",
+            "src/Resources/contao/dca/",
+            "src/Resources/contao/languages/",
+            "src/Resources/contao/templates/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HeimrichHannot\\HyphenatorBundle\\Test\\": "tests/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "HeimrichHannot\\HyphenatorBundle\\ContaoManager\\Plugin"
+    }
+}
