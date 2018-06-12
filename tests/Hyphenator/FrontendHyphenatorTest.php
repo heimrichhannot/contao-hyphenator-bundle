@@ -65,6 +65,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
         $container = $this->mockContainer();
 
         $container->set('contao.resource_finder', new ResourceFinder([$this->getFixturesDir().'/vendor/contao/core-bundle/src/Resources/contao']));
+        $container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/var/cache');
 
         System::setContainer($container);
 
@@ -104,7 +105,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<p>We have some really long words in german like sauerstofffeldflasche.</p>',
                 $this->getPage(),
                 $this->getConfig(),
-                '<p>We have some really long words in german like sauer&shy;stoff&shy;feld&shy;flasche.</p>',
+                '<p>We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</p>',
             ],
             [
                 '<p>We have some really long words in german like <a href="">sauerstofffeldflasche.</a></p>',
@@ -116,7 +117,19 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<!DOCTYPE html><html><head></head><body class="index <esi:include src="/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=" onerror="continue" />"><p>We have some really long words in german like sauerstofffeldflasche.</p></body></html>',
                 $this->getPage(),
                 $this->getConfig(),
-                "<!DOCTYPE html>\n<html><head></head><body class='index <esi:include src=\"/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=\" onerror=\"continue\"/>'><p>We have some really long words in german like sauer&shy;stoff&shy;feld&shy;flasche.</p></body></html>\n",
+                "<!DOCTYPE html>\n<html><head></head><body class='index <esi:include src=\"/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=\" onerror=\"continue\"/>'><p>We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</p></body></html>\n",
+            ],
+            [
+                '<p>Familienunternehmen</p>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<p>Fa&shy;mi&shy;li&shy;en&shy;un&shy;ter&shy;neh&shy;men</p>',
+            ],
+            [
+                '<p>Wasserwirtschaft</p>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<p>Was&shy;ser&shy;wirt&shy;schaft</p>',
             ],
         ];
     }
@@ -137,12 +150,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
     {
         $config['hyphenator_tags'] = 'h1, h1> a, h2, h2 > a, h3, h3 > a, h4, h4 > a, h5, h5 > a, h6, h6 > a, p';
         $config['hyphenator_wordMin'] = 10;
-        $config['hyphenator_leftMin'] = 5;
-        $config['hyphenator_rightMin'] = 5;
-        $config['hyphenator_quality'] = 9;
         $config['hyphenator_hyphen'] = '&shy;';
-        $config['hyphenator_filter'] = 'Simple';
-        $config['hyphenator_tokenizers'] = ['Whitespace', 'Punctuation'];
         $config['hyphenator_skipPages'] = [];
 
         return array_merge($config, $data);
