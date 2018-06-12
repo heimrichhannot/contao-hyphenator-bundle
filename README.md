@@ -1,5 +1,10 @@
 # Contao Hyphenator Bundle
 
+![](https://img.shields.io/packagist/v/heimrichhannot/contao-hyphenator-bundle.svg)
+![](https://img.shields.io/packagist/dt/heimrichhannot/contao-hyphenator-bundle.svg)
+[![](https://img.shields.io/travis/heimrichhannot/contao-hyphenator-bundle/master.svg)](https://travis-ci.org/heimrichhannot/contao-hyphenator-bundle/)
+[![](https://img.shields.io/coveralls/heimrichhannot/contao-hyphenator-bundle/master.svg)](https://coveralls.io/github/heimrichhannot/contao-hyphenator-bundle)
+
 A contao bundle that grants server-side hyphenation (thanks to [org_heigl/hyphenator](https://github.com/heiglandreas/Org_Heigl_Hyphenator)). 
 It does support headlines and paragraphs by default. 
 
