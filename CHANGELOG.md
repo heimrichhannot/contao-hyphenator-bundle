@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2018-07-12
+
+### Fixed
+- disable error reporting when potential using HTML5 tags while using `hyphenateHtml`
+
 ## [1.2.0] - 2018-07-12
 
 ### Changed

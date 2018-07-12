@@ -79,7 +79,9 @@ class FrontendHyphenator
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                 if ($html != strip_tags($html)) {
+                    libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
                     $html = $h->hyphenateHtml($html);
+                    libxml_clear_errors();
 
                     if (false === preg_match('#<body>(<p>)?(?<content>.+?)(<\/p>)?<\/body>#is', $html, $matches) || !isset($matches['content'])) {
                         return $node;
