@@ -88,7 +88,8 @@ class FrontendHyphenator
                 }
 
                 $html = $matches['content'];
-                $node->html(StringUtil::decodeEntities($html));
+                $clone->html(StringUtil::decodeEntities($html));
+                $node->replaceWith($clone);
 
                 $cache[$cacheKey] = $html;
 
