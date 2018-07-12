@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2018-07-12
+
+### Fixed
+- `Couldn't fetch DOMElement. Node no longer exists` error while using `hyphenateHtml`, now always use `hyphenateHtml`
+
 ## [1.2.2] - 2018-07-12
 
 ### Fixed

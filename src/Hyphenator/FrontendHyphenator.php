@@ -64,7 +64,8 @@ class FrontendHyphenator
         $doc->filter(Config::get('hyphenator_tags'))->each(
             function ($node, $i) use ($h, &$cache, $cacheEnabled) {
                 /** @var $node HtmlPageCrawler */
-                $html = $node->html();
+                $clone = $node->makeClone(); // make a clone to prevent `Couldn't fetch DOMElement. Node no longer exists`
+                $html = $clone->html(); // restore nested inserttags that were replaced with %7B or %7D
                 $cacheKey = $html;
 
                 if (empty($html)) {
@@ -78,21 +79,16 @@ class FrontendHyphenator
                 $html = str_replace('&shy;', '', $html); // remove manual &shy; html entities before
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
-                if ($html != strip_tags($html)) {
-                    libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                    $html = $h->hyphenateHtml($html);
-                    libxml_clear_errors();
+                libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
+                $html = $h->hyphenateHtml($html);
+                libxml_clear_errors();
 
-                    if (false === preg_match('#<body>(<p>)?(?<content>.+?)(<\/p>)?<\/body>#is', $html, $matches) || !isset($matches['content'])) {
-                        return $node;
-                    }
-
-                    $html = $matches['content'];
-                    $node->replaceWith(StringUtil::decodeEntities($html));
-                } else {
-                    $html = $h->hyphenateText($html);
-                    $node->html(StringUtil::decodeEntities($html));
+                if (false === preg_match('#<body>(<p>)?(?<content>.+?)(<\/p>)?<\/body>#is', $html, $matches) || !isset($matches['content'])) {
+                    return $node;
                 }
+
+                $html = $matches['content'];
+                $node->html(StringUtil::decodeEntities($html));
 
                 $cache[$cacheKey] = $html;
 

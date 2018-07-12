@@ -137,6 +137,12 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 $this->getConfig(),
                 '<h1><a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</a></h1>',
             ],
+            [
+                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br> <br> <a class="more" href="mailto:{{email_url::test@test.de}}">Kontaktieren Sie uns</a></p>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br><br><a class="more" href="mailto:%7B%7Bemail_url::test@test.de%7D%7D">Kon&shy;tak&shy;tie&shy;ren Sie uns</a></p>',
+            ],
         ];
     }
 
