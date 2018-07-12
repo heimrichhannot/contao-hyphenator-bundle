@@ -14,10 +14,11 @@ To extend the functionality, all options can be adjusted within your localconfig
 
 Option | Type | Default |  Description
 ------ | ---- | ------- |  -----------
-hyphenator_tags | string | h1, h1> a, h2, h2 > a, h3, h3 > a, h4, h4 > a, h5, h5 > a, h6, h6 > a, p | What type of tags the hyphenator should look at. 
+hyphenator_tags | string | 'h1:not(:empty), h2:not(:empty), h3:not(:empty), h4:not(:empty), h5:not(:empty), h6:not(:empty), p:not(:empty), a:not(:empty)' | What type of selectors the hyphenator should look at. 
 hyphenator_wordMin | int | 10 | Words under the given length will not be hyphenated altogether.
 hyphenator_hyphen | string | &shy; | This character shall be used as Hyphen-Character. 
-hyphenator_skipPages | array | empty | Array of Contao Page Ids, the Hyphenator should skip from hyphenation. 
+hyphenator_skipPages | array | empty | Array of Contao Page Ids, the Hyphenator should skip from hyphenation.
+hyphenator_enableCache | bool | true | Enable simple caching and do not hyphenate equal elements twice.  
 
 
 ## Requirements
