@@ -12,11 +12,11 @@
 /**
  * Config
  */
-$GLOBALS['TL_CONFIG']['hyphenator_tags']       = 'h1, h1> a, h2, h2 > a, h3, h3 > a, h4, h4 > a, h5, h5 > a, h6, h6 > a, p';
-$GLOBALS['TL_CONFIG']['hyphenator_wordMin']    = 10;
-$GLOBALS['TL_CONFIG']['hyphenator_hyphen']     = '&shy;';
-$GLOBALS['TL_CONFIG']['hyphenator_skipPages']  = [];
-
+$GLOBALS['TL_CONFIG']['hyphenator_tags']        = 'h1:not(:empty), h2:not(:empty), h3:not(:empty), h4:not(:empty), h5:not(:empty), h6:not(:empty), p:not(:empty), a:not(:empty)';
+$GLOBALS['TL_CONFIG']['hyphenator_wordMin']     = 10;
+$GLOBALS['TL_CONFIG']['hyphenator_hyphen']      = '&shy;';
+$GLOBALS['TL_CONFIG']['hyphenator_skipPages']   = [];
+$GLOBALS['TL_CONFIG']['hyphenator_enableCache'] = true;
 
 /**
  * Hooks

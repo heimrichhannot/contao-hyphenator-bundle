@@ -58,21 +58,41 @@ class FrontendHyphenator
 
         $doc = HtmlPageCrawler::create($strBuffer);
 
-        $doc->filter(Config::get('hyphenator_tags'))->each(
-            function ($node, $i) use ($h) {
-                /** @var $node HtmlPageCrawler */
-                $text = $node->html();
+        $cacheEnabled = (bool) Config::get('hyphenator_enableCache');
+        $cache = [];
 
-                // ignore html tags, otherwise &shy; will be added to links for example
-                if ($text != strip_tags($text)) {
+        $doc->filter(Config::get('hyphenator_tags'))->each(
+            function ($node, $i) use ($h, &$cache, $cacheEnabled) {
+                /** @var $node HtmlPageCrawler */
+                $html = $node->html();
+                $cacheKey = $html;
+
+                if (empty($html)) {
                     return $node;
                 }
 
-                $text = str_replace('&shy;', '', $text); // remove manual &shy; html entities before
+                if (true === $cacheEnabled && isset($cache[$cacheKey])) {
+                    return $cache[$cacheKey];
+                }
 
-                $text = $h->hyphenateText($text);
+                $html = str_replace('&shy;', '', $html); // remove manual &shy; html entities before
 
-                $node->html(StringUtil::decodeEntities($text));
+                // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
+                if ($html != strip_tags($html)) {
+                    $html = $h->hyphenateHtml($html);
+
+                    if (false === preg_match('#<body>(<p>)?(?<content>.+?)(<\/p>)?<\/body>#is', $html, $matches) || !isset($matches['content'])) {
+                        return $node;
+                    }
+
+                    $html = $matches['content'];
+                } else {
+                    $html = $h->hyphenateText($html);
+                }
+
+                $node->html(StringUtil::decodeEntities($html));
+
+                $cache[$cacheKey] = $html;
 
                 return $node;
             }

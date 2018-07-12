@@ -108,10 +108,10 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<p>We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</p>',
             ],
             [
-                '<p>We have some really long words in german like <a href="">sauerstofffeldflasche.</a></p>',
+                '<p>We have some really long words in german like <a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">sauerstofffeldflasche.</a></p>',
                 $this->getPage(),
                 $this->getConfig(),
-                '<p>We have some really long words in german like <a href="">sauerstofffeldflasche.</a></p>',
+                '<p>We have some really long words in german like <a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</a></p>',
             ],
             [
                 '<!DOCTYPE html><html><head></head><body class="index <esi:include src="/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=" onerror="continue" />"><p>We have some really long words in german like sauerstofffeldflasche.</p></body></html>',
@@ -130,6 +130,12 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 $this->getPage(),
                 $this->getConfig(),
                 '<p>Was&shy;ser&shy;wirt&shy;schaft</p>',
+            ],
+            [
+                '<h1><a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">We have some really long words in german like sauerstofffeldflasche.</a></h1>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<h1><a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</a></h1>',
             ],
         ];
     }
