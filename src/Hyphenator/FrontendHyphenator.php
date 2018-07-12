@@ -88,11 +88,11 @@ class FrontendHyphenator
                     }
 
                     $html = $matches['content'];
+                    $node->replaceWith(StringUtil::decodeEntities($html));
                 } else {
                     $html = $h->hyphenateText($html);
+                    $node->html(StringUtil::decodeEntities($html));
                 }
-
-                $node->html(StringUtil::decodeEntities($html));
 
                 $cache[$cacheKey] = $html;
 

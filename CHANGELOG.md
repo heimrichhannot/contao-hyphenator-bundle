@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2018-07-12
+
+### Fixed
+- `Couldn't fetch DOMText. Node no longer exists` error while using `hyphenateHtml`, use `$node->replaceWith()` instead of `$node->html()`
+
 ## [1.2.1] - 2018-07-12
 
 ### Fixed
