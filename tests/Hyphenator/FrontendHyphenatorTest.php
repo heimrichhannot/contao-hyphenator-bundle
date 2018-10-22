@@ -28,7 +28,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
     {
         parent::setUp();
 
-        if (!defined('TL_ROOT')) {
+        if (!\defined('TL_ROOT')) {
             \define('TL_ROOT', $this->getFixturesDir());
         }
 
@@ -86,13 +86,9 @@ class FrontendHyphenatorTest extends ContaoTestCase
     {
         $GLOBALS['TL_CONFIG']['hyphenator_tags'] = 'h1, h1> a, h2, h2 > a, h3, h3 > a, h4, h4 > a, h5, h5 > a, h6, h6 > a, p';
         $GLOBALS['TL_CONFIG']['hyphenator_wordMin'] = 10;
-        $GLOBALS['TL_CONFIG']['hyphenator_leftMin'] = 5;
-        $GLOBALS['TL_CONFIG']['hyphenator_rightMin'] = 5;
-        $GLOBALS['TL_CONFIG']['hyphenator_quality'] = 9;
         $GLOBALS['TL_CONFIG']['hyphenator_hyphen'] = '&shy;';
-        $GLOBALS['TL_CONFIG']['hyphenator_filter'] = 'Simple';
-        $GLOBALS['TL_CONFIG']['hyphenator_tokenizers'] = ['Whitespace', 'Punctuation'];
         $GLOBALS['TL_CONFIG']['hyphenator_skipPages'] = [];
+        $GLOBALS['TL_CONFIG']['hyphenator_enableCache'] = true;
 
         return [
             [
@@ -142,6 +138,12 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 $this->getPage(),
                 $this->getConfig(),
                 '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br><br><a class="more" href="mailto:%7B%7Bemail_url::test@test.de%7D%7D">Kon&shy;tak&shy;tie&shy;ren Sie uns</a></p>',
+            ],
+            [
+                '<h1><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;" title="email obfuscation test for test@test.com">&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;</a></h1>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<h1><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;" title="email obfuscation test for test@test.com">&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;</a></h1>',
             ],
         ];
     }

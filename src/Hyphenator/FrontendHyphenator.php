@@ -37,7 +37,7 @@ class FrontendHyphenator
 
         $arrSkipPages = Config::get('hyphenator_skipPages');
 
-        if (null === $objPage || is_array($arrSkipPages) && in_array($objPage->id, $arrSkipPages, true)) {
+        if (null === $objPage || \is_array($arrSkipPages) && \in_array($objPage->id, $arrSkipPages, true)) {
             return $strBuffer;
         }
 
@@ -56,14 +56,21 @@ class FrontendHyphenator
             $strBuffer
         );
 
+        // prevent unescape unicode html entities (email obfuscation)
+        $strBuffer = preg_replace('/&(#+[x0-9a-fA-F]+);/', '&_$1;', $strBuffer);
+
         $doc = HtmlPageCrawler::create($strBuffer);
+        $isHtmlDocument = $doc->isHtmlDocument();
+
+        if (false === $isHtmlDocument) {
+            $doc = HtmlPageCrawler::create(sprintf('<div id="crawler-root">%s</div>', $strBuffer));
+        }
 
         $cacheEnabled = (bool) Config::get('hyphenator_enableCache');
         $cache = [];
 
         $doc->filter(Config::get('hyphenator_tags'))->each(
-            function ($node, $i) use ($h, &$cache, $cacheEnabled) {
-                /** @var $node HtmlPageCrawler */
+            function (HtmlPageCrawler $node, $i) use ($h, &$cache, $cacheEnabled) {
                 $clone = $node->makeClone(); // make a clone to prevent `Couldn't fetch DOMElement. Node no longer exists`
                 $html = $clone->html(); // restore nested inserttags that were replaced with %7B or %7D
                 $cacheKey = $html;
@@ -89,7 +96,7 @@ class FrontendHyphenator
 
                 $html = $matches['content'];
                 $clone->html(StringUtil::decodeEntities($html));
-                $node->replaceWith($clone);
+                $node->replaceWith($clone->saveHTML());
 
                 $cache[$cacheKey] = $html;
 
@@ -97,7 +104,10 @@ class FrontendHyphenator
             }
         );
 
-        $strBuffer = $doc->saveHTML();
+        $strBuffer = false === $isHtmlDocument ? $doc->filter('#crawler-root')->getInnerHtml() : $doc->saveHTML();
+
+        // prevent unescape unicode html entities (email obfuscation)
+        $strBuffer = preg_replace('/&amp;_(#+[x0-9a-fA-F]+);/', '&$1;', $strBuffer);
 
         $strBuffer = preg_replace_callback(
             '/####esi:open####(.*)####esi:close####/',

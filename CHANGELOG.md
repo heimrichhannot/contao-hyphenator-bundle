@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.5] - 2018-10-22
+
+### Fixed
+- prevent unescape unicode html entities (email obfuscation)
+
 ## [1.2.4] - 2018-07-12
 
 ### Fixed
