@@ -43,7 +43,13 @@ class FrontendHyphenator
 
         \Syllable::setCacheDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
-        $h = new \Syllable($objPage->language);
+        $language = $objPage->language;
+
+        if (isset($GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping'][$language])) {
+            $language = $GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping'][$language];
+        }
+
+        $h = new \Syllable($language);
         $h->setMinWordLength(Config::get('hyphenator_wordMin'));
         $h->setHyphen(Config::get('hyphenator_hyphen'));
 

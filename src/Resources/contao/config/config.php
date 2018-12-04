@@ -17,6 +17,7 @@ $GLOBALS['TL_CONFIG']['hyphenator_wordMin']     = 10;
 $GLOBALS['TL_CONFIG']['hyphenator_hyphen']      = '&shy;';
 $GLOBALS['TL_CONFIG']['hyphenator_skipPages']   = [];
 $GLOBALS['TL_CONFIG']['hyphenator_enableCache'] = true;
+$GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping']['en'] = 'en-us'; // map page language to .tex files
 
 /**
  * Hooks

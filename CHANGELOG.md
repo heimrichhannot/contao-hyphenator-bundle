@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.6] - 2018-12-04
+
+### Fixed
+- page language and naming of .tex files do not match, provide `$GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping']` in order to handle with
+
 ## [1.2.5] - 2018-10-22
 
 ### Fixed
