@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.7] - 2018-12-04
+
+### Fixed
+- `cz` language to `cs` tex file mapping
+
 ## [1.2.6] - 2018-12-04
 
 ### Fixed
