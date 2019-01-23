@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2018 Heimrich & Hannot GmbH
+ * Copyright (c) 2019 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -12,6 +12,7 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\StringUtil;
 use Contao\System;
+use Vanderlee\Syllable\Syllable;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
 class FrontendHyphenator
@@ -41,7 +42,7 @@ class FrontendHyphenator
             return $strBuffer;
         }
 
-        \Syllable::setCacheDir(System::getContainer()->getParameter('kernel.cache_dir'));
+        Syllable::setCacheDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
         $language = $objPage->language;
 
@@ -49,7 +50,7 @@ class FrontendHyphenator
             $language = $GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping'][$language];
         }
 
-        $h = new \Syllable($language);
+        $h = new Syllable($language);
         $h->setMinWordLength(Config::get('hyphenator_wordMin'));
         $h->setHyphen(Config::get('hyphenator_hyphen'));
 

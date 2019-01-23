@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2019-01-23
+
+### Fixed
+- `vanderlee/syllable` compatibility to version 1.5 (namespace change…)
+
 ## [1.2.7] - 2018-12-04
 
 ### Fixed
