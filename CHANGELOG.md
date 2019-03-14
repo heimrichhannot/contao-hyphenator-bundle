@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2019-03-14
+
+### Added
+- `dd` and `dt` elements to list of tags that should be recognized for hyphenation
+
 ## [1.3.0] - 2019-01-23
 
 ### Fixed
