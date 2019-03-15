@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2019-03-15
+
+### Fixed
+- hyphenation did not replace same text again, when cache is enabled
+
 ## [1.4.0] - 2019-03-14
 
 ### Added

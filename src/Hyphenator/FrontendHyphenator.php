@@ -87,7 +87,10 @@ class FrontendHyphenator
                 }
 
                 if (true === $cacheEnabled && isset($cache[$cacheKey])) {
-                    return $cache[$cacheKey];
+                    $clone->html(StringUtil::decodeEntities($cache[$cacheKey]));
+                    $node->replaceWith($clone->saveHTML());
+
+                    return $node;
                 }
 
                 $html = str_replace('&shy;', '', $html); // remove manual &shy; html entities before
