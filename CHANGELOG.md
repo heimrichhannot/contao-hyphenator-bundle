@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - 2019-03-18
+
+### Fixed
+- drop skipPage strict comparision check
+
 ## [1.4.1] - 2019-03-15
 
 ### Fixed
