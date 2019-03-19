@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2019-03-19
+
+### Added
+- `.hyphen-none` css class selector, in order to skip hyphenation on elements with that css class
+
 ## [1.4.2] - 2019-03-18
 
 ### Fixed

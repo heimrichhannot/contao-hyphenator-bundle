@@ -14,12 +14,16 @@ To extend the functionality, all options can be adjusted within your localconfig
 
 Option | Type | Default |  Description
 ------ | ---- | ------- |  -----------
-hyphenator_tags | string | 'h1:not(:empty), h2:not(:empty), h3:not(:empty), h4:not(:empty), h5:not(:empty), h6:not(:empty), p:not(:empty), a:not(:empty)' | What type of selectors the hyphenator should look at. 
+hyphenator_tags | string | 'h1:not(:empty):not(.hyphen-none), h2:not(:empty):not(.hyphen-none), h3:not(:empty):not(.hyphen-none), h4:not(:empty):not(.hyphen-none), h5:not(:empty):not(.hyphen-none), h6:not(:empty):not(.hyphen-none), p:not(:empty):not(.hyphen-none), a:not(:empty):not(.hyphen-none), dt:not(:empty):not(.hyphen-none), dd:not(:empty):not(.hyphen-none)' | What type of selectors the hyphenator should look at. 
 hyphenator_wordMin | int | 10 | Words under the given length will not be hyphenated altogether.
 hyphenator_hyphen | string | &shy; | This character shall be used as Hyphen-Character. 
 hyphenator_skipPages | array | empty | Array of Contao Page Ids, the Hyphenator should skip from hyphenation.
 hyphenator_enableCache | bool | true | Enable simple caching and do not hyphenate equal elements twice.  
 
+
+## Skip hyphenation
+
+If you want to skip several tags from hyphenation simply add `hyphen-none` as css-class to the appropriate element.
 
 ## Requirements
 
