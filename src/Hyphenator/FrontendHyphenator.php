@@ -38,7 +38,7 @@ class FrontendHyphenator
 
         $arrSkipPages = Config::get('hyphenator_skipPages');
 
-        if (null === $objPage || \is_array($arrSkipPages) && \in_array($objPage->id, $arrSkipPages, true)) {
+        if (null === $objPage || \is_array($arrSkipPages) && \in_array($objPage->id, $arrSkipPages)) {
             return $strBuffer;
         }
 

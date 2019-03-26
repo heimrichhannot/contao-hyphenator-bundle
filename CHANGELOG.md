@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2019-03-26
+
+### Fixed
+- update cs-fixer config, and fix skipPage strict comparision check
+
 ## [1.5.0] - 2019-03-19
 
 ### Added
