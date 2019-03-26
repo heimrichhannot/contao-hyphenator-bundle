@@ -8,6 +8,8 @@
 A contao bundle that grants server-side hyphenation (thanks to [vanderlee/phpSyllable](https://github.com/vanderlee/phpSyllable)). 
 It does support headlines and paragraphs by default. 
 
+This module also handles line break exceptions, in order to keep words like company names together and prevent line break (see `tl_page` backend entity).  
+
 ## Options
 
 To extend the functionality, all options can be adjusted within your localconfig.
@@ -23,7 +25,7 @@ hyphenator_enableCache | bool | true | Enable simple caching and do not hyphenat
 
 ## Skip hyphenation
 
-If you want to skip several tags from hyphenation simply add `hyphen-none` as css-class to the appropriate element.
+If you want to skip several tags from hyphenation simply add `hyphen-none` as css-class to the appropriate element or use the `tl_page.hyphenation` field. 
 
 ## Requirements
 

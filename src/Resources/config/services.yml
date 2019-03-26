@@ -2,5 +2,4 @@ services:
   huh.hyphenator.frontend:
     class: HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator
     public: true
-    arguments:
-      - '@contao.framework'
+    autowire: true

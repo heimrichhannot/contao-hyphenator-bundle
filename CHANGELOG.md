@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2019-03-26
+
+### Added
+- `tl_page` hyphenation disable/enable/nesting handling in backend mask
+- `tl_page.customLineBreakExceptions` and `tl_page.lineBreakExceptions` added in order to provide support for line break exception to keep words like company names together and prevent line break
+
 ## [1.5.1] - 2019-03-26
 
 ### Fixed
