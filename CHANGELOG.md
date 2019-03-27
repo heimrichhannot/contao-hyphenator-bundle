@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.2] - 2019-03-27
+
+### Fixed
+- handle html entities in lineBreakExceptions replacement properly when using regular expression in order to handle special characters like € sign
+
 ## [1.7.1] - 2019-03-27
 
 ### Fixed

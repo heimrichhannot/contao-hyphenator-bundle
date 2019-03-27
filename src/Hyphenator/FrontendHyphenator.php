@@ -183,10 +183,11 @@ class FrontendHyphenator
 
                 // custom user regex whitespace replacement
                 if (isset($exception['replace']) && !empty($exception['replace'])) {
-                    $search = '#'.$exception['search'];
+                    $search = '#'.StringUtil::decodeEntities($exception['search']);
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '#siU'; // single line and ungreedy
                     $replace = StringUtil::restoreBasicEntities($exception['replace']);
+                    $buffer = StringUtil::decodeEntities($buffer); // decode entities in order to match special characters from replace input like €
                 } // support non regex whitespace replacement
                 else {
                     $search = '#('.StringUtil::decodeEntities($exception['search']).')#siU';
