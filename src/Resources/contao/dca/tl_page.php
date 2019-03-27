@@ -43,11 +43,17 @@ $fields = [
             'tl_class'          => 'long clr',
             'multiColumnEditor' => [
                 'fields' => [
-                    'search' => [
+                    'search'  => [
                         'label'     => &$GLOBALS['TL_LANG']['tl_page']['lineBreakExceptions_search'],
                         'exclude'   => true,
                         'inputType' => 'text',
-                        'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'groupStyle' => 'width: 80%;'],
+                        'eval'      => ['tl_class' => 'w50', 'mandatory' => true, 'groupStyle' => 'width: 40%;', 'decodeEntities' => true],
+                    ],
+                    'replace' => [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_page']['lineBreakExceptions_replace'],
+                        'exclude'   => true,
+                        'inputType' => 'text',
+                        'eval'      => ['tl_class' => 'w50', 'groupStyle' => 'width: 40%;', 'decodeEntities' => true],
                     ],
                 ],
             ],

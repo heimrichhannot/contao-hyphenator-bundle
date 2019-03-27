@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2019-03-27
+
+### Changed
+- `tl_page.customLineBreakExceptions` and `tl_page.lineBreakExceptions` now properly supports regular expressions
+
 ## [1.6.0] - 2019-03-26
 
 ### Added
