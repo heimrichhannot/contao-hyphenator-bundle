@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2019-03-27
+
+### Fixed
+- do not replace attributes of html tags (`tl_page.lineBreakExceptions`)
+- Ungreedy, case insensitive and single line flag added to line break exception replacement
+
 ## [1.7.0] - 2019-03-27
 
 ### Changed
