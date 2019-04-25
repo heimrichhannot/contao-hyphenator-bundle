@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.5] - 2019-04-25
+
+### Fixed
+- missing documentation 
+
 ## [1.7.4] - 2019-04-25
 
 ### Fixed

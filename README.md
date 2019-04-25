@@ -21,13 +21,25 @@ hyphenator_wordMin | int | 10 | Words under the given length will not be hyphena
 hyphenator_hyphen | string | &shy; | This character shall be used as Hyphen-Character. 
 hyphenator_skipPages | array | empty | Array of Contao Page Ids, the Hyphenator should skip from hyphenation.
 hyphenator_enableCache | bool | true | Enable simple caching and do not hyphenate equal elements twice.  
-
+hyphenator_locale_language_mapping | array | ['en' => 'en-us', 'cz' => 'cs'] | Map locale to hyphenator tex separation pattern dictionary
 
 ## Skip hyphenation
 
 If you want to skip several tags from hyphenation simply add `hyphen-none` as css-class to the appropriate element or use the `tl_page.hyphenation` field. 
 
+
+## Line break exceptions
+
+Hyphenator comes with line break exception handling. 
+Simply add `lineBreakExceptions` on `tl_page` and prevent line break for connected word groups like:
+
+- Company Names (search: `Heimrich & Hannot GmbH`, will be replaced to: `Heimrich&nbsp;&amp;&nbsp;Hannot&nbsp;GmbH`)
+- Prices and other units (search: `(\d|€)(\s)(\w)`, replace: `$1[nbsp]$3`, Example: `160.000 m²` -> `160.000&nbsp;m²`, `167 Mio. €` -> `167&nbsp;Mio.&nbsp;€`)
+
+As you can see, if you provide an replace pattern, than an regular expression will handle the replacement, otherwise if only an search pattern is provided, spaces will be protected with `&nbsp;`.
+
 ## Requirements
 
 * [vanderlee/phpSyllable](https://github.com/vanderlee/phpSyllable)
 * [wa72/htmlpagedom](https://github.com/wasinger/htmlpagedom)
+
