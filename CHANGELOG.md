@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.7.3] - 2019-03-27
+
+### Fixed
+- DOMDocument::saveHTML and DOMDocument::saveHTMLFile methods does not product valid HTML when using void elements introduced in HTML5 (`<source>`, `<embed>`…),results in w3c validator errors 
+- hyphenation did not properly work while `tl_page.hyphenation` option is `active`
+- unit tests and coverage 
+
+### Changed
+- first handle line break exceptions, afterwards hyphenate
+
 ## [1.7.2] - 2019-03-27
 
 ### Fixed

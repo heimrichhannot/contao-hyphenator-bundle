@@ -11,13 +11,18 @@ namespace HeimrichHannot\HyphenatorBundle\Hyphenator;
 use Contao\Config;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Vanderlee\Syllable\Syllable;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
 class FrontendHyphenator
 {
+    /**
+     * Elements that have no closing tag (see: https://bugs.php.net/bug.php?id=73175).
+     *
+     * @var array
+     */
+    protected $voidElements = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
     /**
      * @var ContainerInterface
      */
@@ -50,13 +55,11 @@ class FrontendHyphenator
         // prevent unescape unicode html entities (email obfuscation)
         $strBuffer = preg_replace('/&(#+[x0-9a-fA-F]+);/', '&_$1;', $strBuffer);
 
-        Syllable::setCacheDir(System::getContainer()->getParameter('kernel.cache_dir'));
+        Syllable::setCacheDir($this->container->getParameter('kernel.cache_dir'));
 
-        $language = $objPage->language;
+        $languageMapping = Config::get('hyphenator_locale_language_mapping');
 
-        if (isset($GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping'][$language])) {
-            $language = $GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping'][$language];
-        }
+        $language = $languageMapping[$objPage->language] ?? $objPage->language;
 
         $h = new Syllable($language);
         $h->setMinWordLength(Config::get('hyphenator_wordMin'));
@@ -91,14 +94,14 @@ class FrontendHyphenator
 
                 $html = str_replace('&shy;', '', $html); // remove manual &shy; html entities before
 
+                $html = $this->handleLineBreakExceptions($html, $objPage);
+
                 if (!$this->isHyphenationDisabled($objPage, Config::get('hyphenator_skipPages'))) {
                     // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                     libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
                     $html = $h->hyphenateHtml($html);
                     libxml_clear_errors();
                 }
-
-                $html = $this->handleLineBreakExceptions($html, $objPage);
 
                 if (false === preg_match('#<body>(<p>)?(?<content>.+?)(<\/p>)?<\/body>#is', $html, $matches) || !isset($matches['content'])) {
                     return $node;
@@ -115,6 +118,11 @@ class FrontendHyphenator
         );
 
         $strBuffer = false === $isHtmlDocument ? $doc->filter('#crawler-root')->getInnerHtml() : $doc->saveHTML();
+
+        //  DOMDocument::saveHTHMl currently renders this tags as non-void elements (see: https://bugs.php.net/bug.php?id=73175)
+        foreach ($this->voidElements as $voidElement) {
+            $strBuffer = preg_replace('/<\/'.$voidElement.'>/i', '', $strBuffer);
+        }
 
         // prevent unescape unicode html entities (email obfuscation)
         $strBuffer = preg_replace('/&amp;_(#+[x0-9a-fA-F]+);/', '&$1;', $strBuffer);
@@ -153,7 +161,7 @@ class FrontendHyphenator
         }
 
         if ('active' === $page->hyphenation) {
-            return true;
+            return false;
         }
 
         if ($page->pid && null !== ($parent = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_page', $page->pid))) {
@@ -187,7 +195,6 @@ class FrontendHyphenator
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '#siU'; // single line and ungreedy
                     $replace = StringUtil::restoreBasicEntities($exception['replace']);
-                    $buffer = StringUtil::decodeEntities($buffer); // decode entities in order to match special characters from replace input like €
                 } // support non regex whitespace replacement
                 else {
                     $search = '#('.StringUtil::decodeEntities($exception['search']).')#siU';

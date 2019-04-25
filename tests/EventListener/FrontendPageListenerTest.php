@@ -8,18 +8,18 @@
 
 namespace HeimrichHannot\HyphenatorBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener;
 use HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FrontendPageListenerTest extends ContaoTestCase
 {
     /**
-     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ContainerInterface
      */
-    private $framework;
+    private $container;
 
     /**
      * {@inheritdoc}
@@ -28,7 +28,7 @@ class FrontendPageListenerTest extends ContaoTestCase
     {
         parent::setUp();
 
-        $this->framework = $this->mockContaoFramework();
+        $this->container = $this->mockContainer();
     }
 
     /**
@@ -36,7 +36,7 @@ class FrontendPageListenerTest extends ContaoTestCase
      */
     public function testCanBeInstantiated()
     {
-        $listener = new FrontendPageListener($this->framework);
+        $listener = new FrontendPageListener($this->container);
 
         $this->assertInstanceOf(FrontendPageListener::class, $listener);
     }
@@ -47,11 +47,16 @@ class FrontendPageListenerTest extends ContaoTestCase
     public function testModifyFrontendPage()
     {
         $container = $this->mockContainer();
-        $container->set('huh.hyphenator.frontend', new FrontendHyphenator($this->framework));
+        $container->set('huh.hyphenator.frontend', new FrontendHyphenator($this->container));
 
         System::setContainer($container);
 
-        $listener = new FrontendPageListener($this->framework);
+        $pageData = ['language' => 'de'];
+
+        global $objPage;
+        $objPage = (object) $pageData;
+
+        $listener = new FrontendPageListener($this->container);
         $this->assertSame('test', $listener->modifyFrontendPage('test', 'fe_page'));
     }
 }

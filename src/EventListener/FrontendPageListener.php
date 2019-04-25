@@ -8,24 +8,24 @@
 
 namespace HeimrichHannot\HyphenatorBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FrontendPageListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContainerInterface
      */
-    private $framework;
+    private $container;
 
     /**
      * Request constructor.
      *
-     * @param ContaoFrameworkInterface $framework
+     * @param ContainerInterface $container
      */
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContainerInterface $container)
     {
-        $this->framework = $framework;
+        $this->container = $container;
     }
 
     /**

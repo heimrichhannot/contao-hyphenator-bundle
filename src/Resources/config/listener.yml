@@ -2,5 +2,4 @@ services:
   huh.hyphenator.frontendPageListener:
     class: HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener
     public: true
-    arguments:
-      - '@contao.framework'
+    autowire: true
