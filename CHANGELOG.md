@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.7.3] - 2019-03-27
+## [1.7.4] - 2019-04-25
+
+### Fixed
+- travis-ci build
+
+## [1.7.3] - 2019-04-25
 
 ### Fixed
 - DOMDocument::saveHTML and DOMDocument::saveHTMLFile methods does not product valid HTML when using void elements introduced in HTML5 (`<source>`, `<embed>`…),results in w3c validator errors 
