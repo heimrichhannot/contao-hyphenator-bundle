@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - 2019-05-02
+
+### Fixed
+- `README.md` 
+
 ## [1.8.0] - 2019-05-02
 
 ### Changed
