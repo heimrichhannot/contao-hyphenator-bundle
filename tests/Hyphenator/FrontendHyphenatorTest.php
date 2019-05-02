@@ -107,13 +107,13 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<p>Kromě toho můžete závodit na cyklotrenažerech, řešit hádanky, vyrábět a stavět z Lega.</p>',
                 $this->getPage(['customLineBreakExceptions' => true, 'lineBreakExceptions' => [[], ['search' => '(\s\w{1})(\s)', 'replace' => '$1&nbsp;']]]),
                 $this->getConfig(['hyphenator_locale_language_mapping' => ['cz' => 'cs']]),
-                '<p>Krom&#283; toho m&#367;&#382;ete z&aacute;vodit na cy&shy;klot&shy;ren&shy;a&#382;e&shy;rech, &#345;e&scaron;it h&aacute;danky, vyr&aacute;b&#283;t a&nbsp;stav&#283;t z&nbsp;Lega.</p>',
+                '<p>Krom&#283; toho m&#367;&#382;ete z&aacute;vodit na cy&shy;klot&shy;ren&shy;a&#382;e&shy;rech, &#345;e&scaron;it h&aacute;danky, vyr&aacute;b&#283;t<span class="text-nowrap"> a&nbsp;</span>stav&#283;t<span class="text-nowrap"> z&nbsp;</span>Lega.</p>',
             ],
             [
                 '<p>Die Musterfirma AG hat den Kredit in Höhe von 126 Mio. € bewilligt und somit die Realisierung der ersten 81.000 m² finanziert.</p>',
                 $this->getPage(['customLineBreakExceptions' => true, 'lineBreakExceptions' => [['search' => 'Musterfirma AG', 'replace' => ''], ['search' => '(\d|€)(\s)(\w)', 'replace' => '$1[nbsp]$3']]]),
                 $this->getConfig(['hyphenator_locale_language_mapping' => ['cz' => 'cs']]),
-                '<p>Die Mus&shy;ter&shy;fir&shy;ma&nbsp;AG hat den Kredit in H&ouml;he von 126&nbsp;Mio. &euro; bewilligt und somit die Rea&shy;li&shy;sie&shy;rung der ersten 81.000&nbsp;m&sup2; fi&shy;nan&shy;ziert.</p>',
+                '<p>Die <span class="text-nowrap">Mus&shy;ter&shy;fir&shy;ma&nbsp;AG</span> hat den Kredit in H&ouml;he von 12<span class="text-nowrap">6&nbsp;M</span>io. &euro; bewilligt und somit die Rea&shy;li&shy;sie&shy;rung der ersten 81.00<span class="text-nowrap">0&nbsp;m</span>&sup2; fi&shy;nan&shy;ziert.</p>',
             ],
             [
                 '<p>We have some really long words in german like <a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">sauerstofffeldflasche.</a></p>',

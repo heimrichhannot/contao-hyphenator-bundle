@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - 2019-05-02
+
+### Changed
+- prevent `white-space` wrap in line break exception replacement by wrapping replacement in `<span class="text-nowrap"></span>`, do not wrap (no line break) soft-hyphen in line break exceptions 
+
 ## [1.7.5] - 2019-04-25
 
 ### Fixed

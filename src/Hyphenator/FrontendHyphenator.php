@@ -194,11 +194,11 @@ class FrontendHyphenator
                     $search = '#'.StringUtil::decodeEntities($exception['search']);
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '#siU'; // single line and ungreedy
-                    $replace = StringUtil::restoreBasicEntities($exception['replace']);
+                    $replace = '<span class="text-nowrap">'.StringUtil::restoreBasicEntities($exception['replace']).'</span>';
                 } // support non regex whitespace replacement
                 else {
                     $search = '#('.StringUtil::decodeEntities($exception['search']).')#siU';
-                    $replace = implode('&nbsp;', explode(' ', $exception['search']));
+                    $replace = '<span class="text-nowrap">'.implode('&nbsp;', explode(' ', $exception['search'])).'</span>';
                 }
 
                 $buffer = preg_replace($search, $replace, $buffer);
