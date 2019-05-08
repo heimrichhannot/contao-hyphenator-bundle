@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - handle line break exceptions replacement now ignore html tags for all replacement types
 
+## [1.8.3] - 2019-05-08
+
+### Fixed
+- default whitespace replacement without replace pattern
+
+## [1.8.2] - 2019-05-08
+
+### Fixed
+- handle line break exceptions replacement now ignore html tags for all replacement types
+
 ## [1.8.1] - 2019-05-02
 
 ### Fixed

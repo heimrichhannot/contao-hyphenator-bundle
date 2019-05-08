@@ -33,7 +33,7 @@ If you want to skip several tags from hyphenation simply add `hyphen-none` as cs
 Hyphenator comes with line break exception handling. 
 Simply add `lineBreakExceptions` on `tl_page` and prevent line break for connected word groups like:
 
-- Company Names (search: `Heimrich & Hannot GmbH`, will be replaced to: `<span class="text-nowrap">Heimrich&nbsp;&amp;&nbsp;Hannot&nbsp;GmbH</span>`)
+- Company Names (search: `Heimrich & Hannot(?:\sGmbH)|Heimrich & Hannot(?:s)?`, will be replaced to: `<span class="text-nowrap">Heimrich&nbsp;&amp;&nbsp;Hannot&nbsp;GmbH</span>`)
 - Prices and other units (search: `(\d|€)(\s)(\w)`, replace: `$1[nbsp]$3`, Example: `160.000 m²` -> `160.00<span class="text-nowrap">0&nbsp;m</span>²`, `167 Mio. €` -> `16<span class="text-nowrap">7&nbsp;M</span>io.&nbsp;€`)
 
 As you can see, if you provide an replace pattern, than an regular expression will handle the replacement, otherwise if only an search pattern is provided, spaces will be protected with `&nbsp;`.

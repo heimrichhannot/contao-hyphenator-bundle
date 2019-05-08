@@ -189,19 +189,24 @@ class FrontendHyphenator
                     continue;
                 }
 
+                $search = '/';
+
                 // custom user regex whitespace replacement
                 if (isset($exception['replace']) && !empty($exception['replace'])) {
-                    $search = '#'.StringUtil::decodeEntities($exception['search']);
+                    $search .= StringUtil::decodeEntities($exception['search']);
                     $replace = '<span class="text-nowrap">'.StringUtil::restoreBasicEntities($exception['replace']).'</span>';
+                    $search .= '(?![^<]*>)'; // ignore html tags
+                    $search .= '/siU'; // single line and ungreedy
+                    $buffer = preg_replace($search, $replace, $buffer);
                 } // default: whitespace replacement
                 else {
-                    $search = '#('.StringUtil::decodeEntities($exception['search']).')';
-                    $replace = '<span class="text-nowrap">'.implode('&nbsp;', explode(' ', $exception['search'])).'</span>';
+                    $search .= '('.StringUtil::decodeEntities($exception['search']).')';
+                    $search .= '(?![^<]*>)'; // ignore html tags
+                    $search .= '/siU'; // single line and ungreedy
+                    $buffer = preg_replace_callback($search, function ($matches) {
+                        return '<span class="text-nowrap">'.implode('&nbsp;', explode(' ', $matches[0])).'</span>';
+                    }, $buffer);
                 }
-
-                $search .= '(?![^<]*>)'; // ignore html tags
-                $search .= '#siU'; // single line and ungreedy
-                $buffer = preg_replace($search, $replace, $buffer);
             }
         }
 

@@ -116,6 +116,12 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<p>Die <span class="text-nowrap">Mus&shy;ter&shy;fir&shy;ma&nbsp;AG</span> hat den Kredit in H&ouml;he von 12<span class="text-nowrap">6&nbsp;M</span>io. &euro; bewilligt und somit die Rea&shy;li&shy;sie&shy;rung der ersten 81.00<span class="text-nowrap">0&nbsp;m</span>&sup2; fi&shy;nan&shy;ziert.</p>',
             ],
             [
+                '<p>Die Musterfirma AG wurde unter dem Namen Musterfirmas gegründet.</p>',
+                $this->getPage(['customLineBreakExceptions' => true, 'lineBreakExceptions' => [['search' => 'Musterfirma(?:\sAG)|Musterfirma(?:s)', 'replace' => '']]]),
+                $this->getConfig(['hyphenator_locale_language_mapping' => ['cz' => 'cs']]),
+                '<p>Die <span class="text-nowrap">Mus&shy;ter&shy;fir&shy;ma&nbsp;AG</span> wurde unter dem Namen <span class="text-nowrap">Mus&shy;ter&shy;fir&shy;mas</span> gegr&uuml;ndet.</p>',
+            ],
+            [
                 '<p>We have some really long words in german like <a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">sauerstofffeldflasche.</a></p>',
                 $this->getPage(),
                 $this->getConfig(),
