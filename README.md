@@ -18,6 +18,8 @@ Option | Type | Default |  Description
 ------ | ---- | ------- |  -----------
 hyphenator_tags | string | 'h1:not(:empty):not(.hyphen-none), h2:not(:empty):not(.hyphen-none), h3:not(:empty):not(.hyphen-none), h4:not(:empty):not(.hyphen-none), h5:not(:empty):not(.hyphen-none), h6:not(:empty):not(.hyphen-none), p:not(:empty):not(.hyphen-none), a:not(:empty):not(.hyphen-none), dt:not(:empty):not(.hyphen-none), dd:not(:empty):not(.hyphen-none)' | What type of selectors the hyphenator should look at. 
 hyphenator_wordMin | int | 10 | Words under the given length will not be hyphenated altogether.
+hyphenator_hyphenedLeftMin | int | 6 | After hyphenation the resulting left part must have at least this many characters.
+hyphenator_hyphenedRightMin | int | 6 | After hyphenation the resulting right part must have at least this many characters.
 hyphenator_hyphen | string | &shy; | This character shall be used as Hyphen-Character. 
 hyphenator_skipPages | array | empty | Array of Contao Page Ids, the Hyphenator should skip from hyphenation.
 hyphenator_enableCache | bool | true | Enable simple caching and do not hyphenate equal elements twice.  

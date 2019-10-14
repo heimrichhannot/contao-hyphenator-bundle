@@ -11,6 +11,7 @@ namespace HeimrichHannot\HyphenatorBundle\Hyphenator;
 use Contao\Config;
 use Contao\PageModel;
 use Contao\StringUtil;
+use HeimrichHannot\HyphenatorBundle\Source\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Vanderlee\Syllable\Syllable;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
@@ -62,6 +63,12 @@ class FrontendHyphenator
         $language = $languageMapping[$objPage->language] ?? $objPage->language;
 
         $h = new Syllable($language);
+
+        $source = new File($language, __DIR__ . '/../../../../vanderlee/syllable/languages', [
+            $language => [$GLOBALS['TL_CONFIG']['hyphenator_hyphenedLeftMin'], $GLOBALS['TL_CONFIG']['hyphenator_hyphenedRightMin']]
+        ]);
+
+        $h->setSource($source);
         $h->setMinWordLength(Config::get('hyphenator_wordMin'));
         $h->setHyphen(Config::get('hyphenator_hyphen'));
 
