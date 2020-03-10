@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.9.1] - 2020-03-09
+- fixed an error with esi tags appeared only in some circumstances
+
 ## [1.9.0] - 2019-10-14
 
 ### Added

@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace HeimrichHannot\HyphenatorBundle\Source;
 
 use Vanderlee\Syllable\Source\Source;
 
 /**
- * Copy of Vanderlee\Syllable\Source\File
+ * Copy of Vanderlee\Syllable\Source\File.
  *
  * Adds setter for field "minHyphens"
  */
@@ -49,104 +55,6 @@ class File implements Source
         return isset(self::$minHyphens[$this->language]) ? self::$minHyphens[$this->language] : null;
     }
 
-    private function loadLanguage()
-    {
-        if (!$this->loaded) {
-            $this->patterns = [];
-            $this->max_pattern_length = 0;
-            $this->hyphenations = [];
-
-            // parser state
-            $command = false;
-            $braces = false;
-
-            // parse .tex file
-            foreach (file("{$this->path}/hyph-{$this->language}.tex") as $line) {
-                $offset = 0;
-                $strlen_line = mb_strlen($line);
-                while ($offset < $strlen_line) {
-                    $char = $line[$offset];
-
-                    // %comment
-                    if ($char === '%') {
-                        break; // ignore rest of line
-                    }
-
-                    // \command
-                    if ($char === '\\' && preg_match('~^\\\\([[:alpha:]]+)~', mb_substr($line, $offset), $m) === 1) {
-                        $command = $m[1];
-                        $offset += mb_strlen($m[0]);
-                        continue; // next token
-                    }
-
-                    // {
-                    if ($char === '{') {
-                        $braces = true;
-                        $offset++;
-                        continue; // next token
-                    }
-
-                    // content
-                    if ($braces) {
-                        switch ($command) {
-                            case 'patterns':
-                                if (preg_match('~^\S+~u', mb_substr($line, $offset), $m) === 1) {
-                                    $numbers = '';
-                                    $pattern = '';
-                                    $strlen = 0;
-                                    $expect_number = true;
-                                    foreach (preg_split('/(?<!^)(?!$)/u', $m[0]) as $char) {
-                                        if (is_numeric($char)) {
-                                            $numbers .= $char;
-                                            $expect_number = false;
-                                        } else {
-                                            if ($expect_number) {
-                                                $numbers .= '0';
-                                            }
-                                            $pattern .= $char;
-                                            $strlen++;
-                                            $expect_number = true;
-                                        }
-                                        $offset++;
-                                    }
-                                    if ($expect_number) {
-                                        $numbers .= '0';
-                                    }
-
-                                    $this->patterns[$pattern] = $numbers;
-                                    if ($strlen > $this->max_pattern_length) {
-                                        $this->max_pattern_length = $strlen;
-                                    }
-                                }
-                                continue 3; // next token
-
-                            case 'hyphenation':
-                                if (preg_match('~^\S+~u', substr($line, $offset), $m) === 1) {
-                                    $hyphenation = preg_replace('~\-~', '', $m[0]);
-                                    $this->hyphenations[$hyphenation] = $m[0];
-                                    $offset += strlen($m[0]);
-                                }
-                                continue 3; // next token
-                        }
-                    }
-
-                    // }
-                    if ($char === '}') {
-                        $braces = false;
-                        $command = false;
-                        $offset++;
-                        continue; // next token
-                    }
-
-                    // ignorable content, skip one char
-                    $offset++;
-                }
-            }
-
-            $this->loaded = true;
-        }
-    }
-
     public function getHyphentations()
     {
         $this->loadLanguage();
@@ -166,5 +74,112 @@ class File implements Source
         $this->loadLanguage();
 
         return $this->patterns;
+    }
+
+    private function loadLanguage()
+    {
+        if (!$this->loaded) {
+            $this->patterns = [];
+            $this->max_pattern_length = 0;
+            $this->hyphenations = [];
+
+            // parser state
+            $command = false;
+            $braces = false;
+
+            // parse .tex file
+            foreach (file("{$this->path}/hyph-{$this->language}.tex") as $line) {
+                $offset = 0;
+                $strlen_line = mb_strlen($line);
+
+                while ($offset < $strlen_line) {
+                    $char = $line[$offset];
+
+                    // %comment
+                    if ('%' === $char) {
+                        break; // ignore rest of line
+                    }
+
+                    // \command
+                    if ('\\' === $char && 1 === preg_match('~^\\\\([[:alpha:]]+)~', mb_substr($line, $offset), $m)) {
+                        $command = $m[1];
+                        $offset += mb_strlen($m[0]);
+
+                        continue; // next token
+                    }
+
+                    // {
+                    if ('{' === $char) {
+                        $braces = true;
+                        ++$offset;
+
+                        continue; // next token
+                    }
+
+                    // content
+                    if ($braces) {
+                        switch ($command) {
+                            case 'patterns':
+                                if (1 === preg_match('~^\S+~u', mb_substr($line, $offset), $m)) {
+                                    $numbers = '';
+                                    $pattern = '';
+                                    $strlen = 0;
+                                    $expect_number = true;
+
+                                    foreach (preg_split('/(?<!^)(?!$)/u', $m[0]) as $char) {
+                                        if (is_numeric($char)) {
+                                            $numbers .= $char;
+                                            $expect_number = false;
+                                        } else {
+                                            if ($expect_number) {
+                                                $numbers .= '0';
+                                            }
+                                            $pattern .= $char;
+                                            ++$strlen;
+                                            $expect_number = true;
+                                        }
+                                        ++$offset;
+                                    }
+
+                                    if ($expect_number) {
+                                        $numbers .= '0';
+                                    }
+
+                                    $this->patterns[$pattern] = $numbers;
+
+                                    if ($strlen > $this->max_pattern_length) {
+                                        $this->max_pattern_length = $strlen;
+                                    }
+                                }
+
+                                continue 3; // next token
+
+                            case 'hyphenation':
+                                if (1 === preg_match('~^\S+~u', substr($line, $offset), $m)) {
+                                    $hyphenation = preg_replace('~\-~', '', $m[0]);
+                                    $this->hyphenations[$hyphenation] = $m[0];
+                                    $offset += \strlen($m[0]);
+                                }
+
+                                continue 3; // next token
+                        }
+                    }
+
+                    // }
+                    if ('}' === $char) {
+                        $braces = false;
+                        $command = false;
+                        ++$offset;
+
+                        continue; // next token
+                    }
+
+                    // ignorable content, skip one char
+                    ++$offset;
+                }
+            }
+
+            $this->loaded = true;
+        }
     }
 }

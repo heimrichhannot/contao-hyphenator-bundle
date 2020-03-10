@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2019 Heimrich & Hannot GmbH
+ * Copyright (c) 2020 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -89,6 +89,8 @@ class FrontendHyphenatorTest extends ContaoTestCase
         $GLOBALS['TL_CONFIG']['hyphenator_hyphen'] = '&shy;';
         $GLOBALS['TL_CONFIG']['hyphenator_skipPages'] = [];
         $GLOBALS['TL_CONFIG']['hyphenator_enableCache'] = true;
+        $GLOBALS['TL_CONFIG']['hyphenator_hyphenedLeftMin'] = 6;
+        $GLOBALS['TL_CONFIG']['hyphenator_hyphenedRightMin'] = 6;
 
         return [
             [
@@ -128,10 +130,10 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<p>We have some really long words in german like <a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</a></p>',
             ],
             [
-                '<!DOCTYPE html><html><head></head><body class="index <esi:include src="/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=" onerror="continue" />"><p>We have some really long words in german like sauerstofffeldflasche.</p></body></html>',
+                '<!DOCTYPE html><html><head></head><body class="index <esi:include src="/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=" onerror="continue"/>"><p>We have some really long words in german like sauerstofffeldflasche.</p></body></html>',
                 $this->getPage(),
                 $this->getConfig(),
-                "<!DOCTYPE html>\n<html><head></head><body class='index <esi:include src=\"/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=\" onerror=\"continue\"/>'><p>We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</p></body></html>\n",
+                "<!DOCTYPE html>\n<html><head></head><body class=\"index <esi:include src=\"/_fragment?_path=insertTag={{ua::class}}&_format=html&_locale=de&_controller=contao.controller.insert_tags:renderAction&clientCache=0&pageId=4&request=de/&_hash=zZYbGzqkVE2ZqKSMgbxxQT6iXorr3OSFLJVqBiou0HE=\" onerror=\"continue\"/>\"><p>We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</p></body></html>\n",
             ],
             [
                 '<p>Familienunternehmen</p>',
@@ -152,10 +154,10 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<h1><a href="http://sauerstofffeldflasche.de" title="sauerstofffeldflasche">We have some really long words in german like sau&shy;er&shy;stoff&shy;feld&shy;fla&shy;sche.</a></h1>',
             ],
             [
-                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br> <br> <a class="more" href="mailto:{{email_url::test@test.de}}">Kontaktieren Sie uns</a></p>',
+                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br> <br><a class="more" href="mailto:{{email_url::test@test.de}}">Kontaktieren Sie uns</a></p>',
                 $this->getPage(),
                 $this->getConfig(),
-                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br><br><a class="more" href="mailto:%7B%7Bemail_url::test@test.de%7D%7D">Kon&shy;tak&shy;tie&shy;ren Sie uns</a></p>',
+                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br> <br><a class="more" href="mailto:%7B%7Bemail_url::test@test.de%7D%7D">Kon&shy;tak&shy;tie&shy;ren Sie uns</a></p>',
             ],
             [
                 '<h1><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;" title="email obfuscation test for test@test.com">&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;</a></h1>',
@@ -198,9 +200,6 @@ class FrontendHyphenatorTest extends ContaoTestCase
         return array_merge($config, $data);
     }
 
-    /**
-     * @return string
-     */
     protected function getFixturesDir(): string
     {
         return __DIR__.\DIRECTORY_SEPARATOR.'..'.\DIRECTORY_SEPARATOR.'Fixtures';
