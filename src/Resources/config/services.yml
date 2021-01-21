@@ -1,5 +1,12 @@
 services:
+
   huh.hyphenator.frontend:
     class: HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator
+    public: true
+    autowire: true
+  HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator: "@huh.hyphenator.frontend"
+
+  huh.hyphenator.frontendPageListener:
+    class: HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener
     public: true
     autowire: true

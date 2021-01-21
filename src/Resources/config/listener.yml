@@ -1,5 +1,0 @@
-services:
-  huh.hyphenator.frontendPageListener:
-    class: HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener
-    public: true
-    autowire: true

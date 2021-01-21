@@ -1,14 +1,13 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
 
 namespace HeimrichHannot\HyphenatorBundle\Tests\EventListener;
 
-use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener;
 use HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator;
@@ -36,7 +35,7 @@ class FrontendPageListenerTest extends ContaoTestCase
      */
     public function testCanBeInstantiated()
     {
-        $listener = new FrontendPageListener($this->container);
+        $listener = new FrontendPageListener($this->createMock(FrontendHyphenator::class));
 
         $this->assertInstanceOf(FrontendPageListener::class, $listener);
     }
@@ -46,17 +45,10 @@ class FrontendPageListenerTest extends ContaoTestCase
      */
     public function testModifyFrontendPage()
     {
-        $container = $this->mockContainer();
-        $container->set('huh.hyphenator.frontend', new FrontendHyphenator($this->container));
+        $hypenatorMock = $this->createMock(FrontendHyphenator::class);
+        $hypenatorMock->method('hyphenate')->willReturn('hyphenated text');
 
-        System::setContainer($container);
-
-        $pageData = ['language' => 'de'];
-
-        global $objPage;
-        $objPage = (object) $pageData;
-
-        $listener = new FrontendPageListener($this->container);
-        $this->assertSame('test', $listener->modifyFrontendPage('test', 'fe_page'));
+        $listener = new FrontendPageListener($hypenatorMock);
+        $this->assertSame('hyphenated text', $listener->modifyFrontendPage('test', 'fe_page'));
     }
 }

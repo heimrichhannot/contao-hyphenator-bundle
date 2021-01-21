@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.9.2] - 2021-01-21
+- added missing multi-column-editor dependency (see #4)
+- small code enhancements
+
 ## [1.9.1] - 2020-03-09
 - fixed an error with esi tags appeared only in some circumstances
 
