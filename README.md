@@ -29,6 +29,18 @@ hyphenator_locale_language_mapping | array | ['en' => 'en-us', 'cz' => 'cs'] | M
 
 If you want to skip several tags from hyphenation simply add `hyphen-none` as css-class to the appropriate element or use the `tl_page.hyphenation` field. 
 
+You also can add tags to be skipped to your project configuration. See configuration reference below
+
+## Configuration reference
+
+```yaml
+# Default configuration for extension with alias: "huh_hyphenator"
+huh_hyphenator:
+  
+  # Add tags you want to be skipped from hyphenating, to array (string without <>)
+  skip_tags: []
+
+```
 
 ## Line break exceptions
 
@@ -44,4 +56,3 @@ As you can see, if you provide an replace pattern, than an regular expression wi
 
 * [vanderlee/phpSyllable](https://github.com/vanderlee/phpSyllable)
 * [wa72/htmlpagedom](https://github.com/wasinger/htmlpagedom)
-
