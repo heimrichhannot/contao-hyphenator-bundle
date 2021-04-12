@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - 2021-04-12
+- fixed container configuration default value
+
 ## [1.10.0] - 2021-04-12
 - added configuration to skipp html tags from hyphernating(see #5)
 

@@ -29,13 +29,11 @@ class Configuration implements ConfigurationInterface
             $rootNode = $treeBuilder->getRootNode();
         }
 
-//        $rootNode = $treeBuilder->root(static::ROOT_ID);
         $rootNode
             ->children()
                 ->arrayNode('skip_tags')
-                    ->scalarPrototype()
-                        ->defaultValue(['script'])
-                    ->end()
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['script'])
                 ->end()
             ->end();
 
