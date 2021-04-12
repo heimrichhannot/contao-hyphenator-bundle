@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.10.0] - 2021-04-12
+- added configuration to skipp html tags from hyphernating(see #5)
+
 ## [1.9.2] - 2021-01-21
 - added missing multi-column-editor dependency (see #4)
 - small code enhancements
