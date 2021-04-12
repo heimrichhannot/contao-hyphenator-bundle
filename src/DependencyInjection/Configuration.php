@@ -20,12 +20,22 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root(static::ROOT_ID);
+        $treeBuilder = new TreeBuilder(static::ROOT_ID);
+
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->root(static::ROOT_ID);
+        } else {
+            $rootNode = $treeBuilder->getRootNode();
+        }
+
+//        $rootNode = $treeBuilder->root(static::ROOT_ID);
         $rootNode
             ->children()
                 ->arrayNode('skip_tags')
-                    ->scalarPrototype()->end()
+                    ->scalarPrototype()
+                        ->defaultValue(['script'])
+                    ->end()
                 ->end()
             ->end();
 

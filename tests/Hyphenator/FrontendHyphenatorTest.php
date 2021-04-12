@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2020 Heimrich & Hannot GmbH
+ * Copyright (c) 2021 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -68,6 +68,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
         $modelUtil = $this->createMock(ModelUtil::class);
 
         $this->container->set('huh.utils.model', $modelUtil);
+        $this->container->setParameter('huh_hyphenator', ['skip_tags' => ['script', 'img']]);
 
         $listener = new FrontendHyphenator($this->container);
 
@@ -157,7 +158,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br> <br><a class="more" href="mailto:{{email_url::test@test.de}}">Kontaktieren Sie uns</a></p>',
                 $this->getPage(),
                 $this->getConfig(),
-                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br> <br><a class="more" href="mailto:%7B%7Bemail_url::test@test.de%7D%7D">Kon&shy;tak&shy;tie&shy;ren Sie uns</a></p>',
+                '<p><br> Tel: +49 40 123 45 67<br> Fax: +49 40 123 45 68 <br> {{email::test@test.de} <br><br><a class="more" href="mailto:%7B%7Bemail_url::test@test.de%7D%7D">Kon&shy;tak&shy;tie&shy;ren Sie uns</a></p>',
             ],
             [
                 '<h1><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;" title="email obfuscation test for test@test.com">&#116;&#x65;&#x73;&#x74;&#64;&#x74;&#101;&#115;&#x74;&#46;&#99;&#x6F;&#109;</a></h1>',
@@ -170,6 +171,18 @@ class FrontendHyphenatorTest extends ContaoTestCase
                 $this->getPage(),
                 $this->getConfig(),
                 '<picture><!--[if IE 9]><video style="display: none;"><![endif]--><source srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=" media="(min-width: 853px)"><!--[if IE 9]></video><![endif]--><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=" data-wrapper="#image-wrapper-1368074709" class="image" alt=""></picture>',
+            ],
+            [
+                '<a><script>document.querySelectorAll("#id").addEventListener("click", e => {console.log(e.target})</script></a>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<a><script>document.querySelectorAll("#id").addEventListener("click", e => {console.log(e.target})</script></a>',
+            ],
+            [
+                '<a><picture><!--[if IE 9]><video style="display: none;"><![endif]--><source srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=" media="(min-width: 853px)"><!--[if IE 9]></video><![endif]--><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=" data-wrapper="#image-wrapper-1368074709" class="image" alt=""></picture></a>',
+                $this->getPage(),
+                $this->getConfig(),
+                '<a><picture><!--[if IE 9]><video style="display: none;"><![endif]--><source srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=" media="(min-width: 853px)"><!--[if IE 9]></video><![endif]--><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=" data-wrapper="#image-wrapper-1368074709" class="image" alt=""></picture></a>',
             ],
         ];
     }
