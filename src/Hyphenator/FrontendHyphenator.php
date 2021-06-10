@@ -42,6 +42,10 @@ class FrontendHyphenator
         /* @var PageModel $objPage */
         global $objPage;
 
+        if ($this->isHyphenationDisabled($objPage, Config::get('hyphenator_skipPages'))) {
+            return $strBuffer;
+        }
+
         $esiTagCache = [];
         $esiTagCacheIndex = 0;
 
@@ -107,49 +111,47 @@ class FrontendHyphenator
 
                 $html = $this->handleLineBreakExceptions($html, $objPage);
 
-                if (!$this->isHyphenationDisabled($objPage, Config::get('hyphenator_skipPages'))) {
-                    // mask tags configured to be skipped
-                    $skipTagCache = [];
-                    $skipTagCacheIndex = 0;
+                // mask tags configured to be skipped
+                $skipTagCache = [];
+                $skipTagCacheIndex = 0;
 
-                    foreach ($this->container->getParameter('huh_hyphenator')['skip_tags'] as $tag) {
-                        if (\in_array($tag, $this->voidElements)) {
-                            $html = preg_replace_callback(
-                                '#<\s*?'.$tag.'\b[^>]*>#s',
-                                function ($matches) use (&$skipTagCache, $skipTagCacheIndex) {
-                                    $skipTagCache[$skipTagCacheIndex] = $matches[0];
-                                    ++$skipTagCacheIndex;
+                foreach ($this->container->getParameter('huh_hyphenator')['skip_tags'] as $tag) {
+                    if (\in_array($tag, $this->voidElements)) {
+                        $html = preg_replace_callback(
+                            '#<\s*?'.$tag.'\b[^>]*>#s',
+                            function ($matches) use (&$skipTagCache, $skipTagCacheIndex) {
+                                $skipTagCache[$skipTagCacheIndex] = $matches[0];
+                                ++$skipTagCacheIndex;
 
-                                    return '####skip:open####'.($skipTagCacheIndex - 1).'####skip:close####';
-                                }, $html
-                            );
-                        } else {
-                            $html = preg_replace_callback(
-                                '#<\s*?'.$tag.'\b[^>]*>(.*?)</'.$tag.'\b[^>]*>#s',
-                                function ($matches) use (&$skipTagCache, &$skipTagCacheIndex) {
-                                    $skipTagCache[$skipTagCacheIndex] = $matches[0];
-                                    ++$skipTagCacheIndex;
+                                return '####skip:open####'.($skipTagCacheIndex - 1).'####skip:close####';
+                            }, $html
+                        );
+                    } else {
+                        $html = preg_replace_callback(
+                            '#<\s*?'.$tag.'\b[^>]*>(.*?)</'.$tag.'\b[^>]*>#s',
+                            function ($matches) use (&$skipTagCache, &$skipTagCacheIndex) {
+                                $skipTagCache[$skipTagCacheIndex] = $matches[0];
+                                ++$skipTagCacheIndex;
 
-                                    return '####skip:open####'.($skipTagCacheIndex - 1).'####skip:close####';
-                                }, $html
-                            );
-                        }
+                                return '####skip:open####'.($skipTagCacheIndex - 1).'####skip:close####';
+                            }, $html
+                        );
                     }
-
-                    // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
-                    libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                    $html = $h->hyphenateHtml($html);
-                    libxml_clear_errors();
-
-                    // replace skipped tags
-                    $html = preg_replace_callback(
-                        '/####skip:open####(.*)####skip:close####/',
-                        function ($matches) use ($skipTagCache) {
-                            return $skipTagCache[$matches[1]];
-                        },
-                        $html
-                    );
                 }
+
+                // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
+                libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
+                $html = $h->hyphenateHtml($html);
+                libxml_clear_errors();
+
+                // replace skipped tags
+                $html = preg_replace_callback(
+                    '/####skip:open####(.*)####skip:close####/',
+                    function ($matches) use ($skipTagCache) {
+                        return $skipTagCache[$matches[1]];
+                    },
+                    $html
+                );
 
                 if (false === preg_match('#<body>(<p>)?(?<content>.+?)(<\/p>)?<\/body>#is', $html, $matches) || !isset($matches['content'])) {
                     return $node;
