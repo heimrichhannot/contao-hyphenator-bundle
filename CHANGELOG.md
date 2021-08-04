@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.3] - 2021-08-04
+- Fixed: tl_page.hyphenation not excluded
+
 ## [1.10.2] - 2021-06-10
 
 - fixed skip pages
