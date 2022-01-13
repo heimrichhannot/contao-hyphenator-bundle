@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0] - 2022-01-13
+- Changed: allow wa72/htmlpagedom v2
+
 ## [1.10.3] - 2021-08-04
 - Fixed: tl_page.hyphenation not excluded
 

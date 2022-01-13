@@ -101,7 +101,7 @@ class FrontendHyphenator
                 }
 
                 if (true === $cacheEnabled && isset($cache[$cacheKey])) {
-                    $clone->html(StringUtil::decodeEntities($cache[$cacheKey]));
+                    $clone->setInnerHtml(StringUtil::decodeEntities($cache[$cacheKey]));
                     $node->replaceWith($clone->saveHTML());
 
                     return $node;
@@ -158,7 +158,7 @@ class FrontendHyphenator
                 }
 
                 $html = $matches['content'];
-                $clone->html(StringUtil::decodeEntities($html));
+                $clone->setInnerHtml(StringUtil::decodeEntities($html));
                 $node->replaceWith($clone->saveHTML());
 
                 $cache[$cacheKey] = $html;
