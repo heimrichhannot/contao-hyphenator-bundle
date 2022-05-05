@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 Heimrich & Hannot GmbH
+ * Copyright (c) 2022 Heimrich & Hannot GmbH
  *
  * @license LGPL-3.0-or-later
  */
@@ -141,7 +141,7 @@ class FrontendHyphenator
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                 libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                $html = $h->hyphenateHtml($html);
+                $html = $h->hyphenateHtml(utf8_decode($html));
                 libxml_clear_errors();
 
                 // replace skipped tags

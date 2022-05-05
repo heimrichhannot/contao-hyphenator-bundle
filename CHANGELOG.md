@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.1] - 2022-05-05
+- Fixed: umlaut encoding ([#6])
+
 ## [1.11.0] - 2022-01-13
 - Changed: allow wa72/htmlpagedom v2
 
@@ -223,3 +226,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - addressed wrong service for `modifyFrontendPage` hook
+
+
+[#6]: https://github.com/heimrichhannot/contao-hyphenator-bundle/issues/6
