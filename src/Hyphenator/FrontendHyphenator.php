@@ -141,7 +141,7 @@ class FrontendHyphenator
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                 libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                $html = $h->hyphenateHtml(utf8_decode($html));
+                $html = $h->hyphenateHtml('<?xml encoding="utf-8" ?>'.$html);
                 libxml_clear_errors();
 
                 // replace skipped tags
