@@ -31,7 +31,7 @@ $fields = [
         'default' => 'inactive',
         'exclude' => true,
         'options' => ['active', 'inactive'],
-        'reference' => $GLOBALS['TL_LANG']['tl_page']['reference']['hyphenation'],
+        'reference' => $GLOBALS['TL_LANG']['tl_page']['reference']['hyphenation'] ?? null,
         'eval' => ['includeBlankOption' => true, 'tl_class' => 'w50'],
         'sql' => "char(8) NOT NULL default ''",
     ],
