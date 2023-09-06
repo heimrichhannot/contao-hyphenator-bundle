@@ -13,6 +13,8 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use HeimrichHannot\HyphenatorBundle\Source\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Vanderlee\Syllable\Syllable;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
@@ -32,9 +34,10 @@ class FrontendHyphenator
     /**
      * Request constructor.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, ParameterBagInterface $parameterBag)
     {
         $this->container = $container;
+        $this->parameterBag = $parameterBag;
     }
 
     public function hyphenate($strBuffer)
@@ -72,7 +75,9 @@ class FrontendHyphenator
 
         $h = new Syllable($language);
 
-        $source = new File($language, __DIR__.'/../../../../vanderlee/syllable/languages', [
+        $rootPath = $this->parameterBag->get('kernel.project_dir');
+
+        $source = new File($language, $rootPath . '/vendor/vanderlee/syllable/languages', [
             $language => [$GLOBALS['TL_CONFIG']['hyphenator_hyphenedLeftMin'], $GLOBALS['TL_CONFIG']['hyphenator_hyphenedRightMin']],
         ]);
 
