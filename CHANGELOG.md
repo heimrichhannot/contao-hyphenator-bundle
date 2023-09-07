@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.4] - 2023-09-07
+- Changed: vanderlee/syllable: correct languages path for any development directory
+- Fixed: php8 warning: undefined key `reference`
+
 ## [1.11.3] - 2022-09-06
 - Changed: allow php 8
 
