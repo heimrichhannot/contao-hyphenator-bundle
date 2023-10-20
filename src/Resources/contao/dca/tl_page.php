@@ -17,6 +17,7 @@ $dc['palettes']['__selector__'][] = 'customLineBreakExceptions';
  * Palettes
  */
 $dc['palettes']['root'] = str_replace('{layout_legend', '{hyphenator_legend},hyphenation,customLineBreakExceptions;{layout_legend', $dc['palettes']['root']);
+$dc['palettes']['rootfallback'] = str_replace('{layout_legend', '{hyphenator_legend},hyphenation,customLineBreakExceptions;{layout_legend', $dc['palettes']['rootfallback']);
 $dc['palettes']['regular'] = str_replace('{layout_legend', '{hyphenator_legend},hyphenation,customLineBreakExceptions;{layout_legend', $dc['palettes']['regular']);
 
 /*
