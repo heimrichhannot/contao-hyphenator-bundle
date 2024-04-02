@@ -11,6 +11,7 @@
  */
 
 use Contao\System;
+use HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener;
 use HeimrichHannot\UtilsBundle\Util\Utils;
 
 /**
@@ -31,7 +32,7 @@ $GLOBALS['TL_CONFIG']['hyphenator_locale_language_mapping']['cz'] = 'cs';
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['modifyFrontendPage'][] = ['huh.hyphenator.frontendPageListener', 'modifyFrontendPage'];
+$GLOBALS['TL_HOOKS']['modifyFrontendPage'][] = [FrontendPageListener::class, 'modifyFrontendPage'];
 
 /**
  * Css

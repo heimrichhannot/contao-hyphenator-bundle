@@ -9,16 +9,11 @@
 namespace HeimrichHannot\HyphenatorBundle\Hyphenator;
 
 use Contao\Config;
-use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\System;
 use HeimrichHannot\HyphenatorBundle\Source\File;
 use HeimrichHannot\UtilsBundle\Util\Utils;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Vanderlee\Syllable\Syllable;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
@@ -30,13 +25,13 @@ class FrontendHyphenator
      * @var array
      */
     protected $voidElements = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
-    private ParameterBag $parameterBag;
+    private ParameterBagInterface $parameterBag;
     private Utils $utils;
 
     /**
      * Request constructor.
      */
-    public function __construct(ParameterBag $parameterBag, Utils $utils)
+    public function __construct(ParameterBagInterface $parameterBag, Utils $utils)
     {
         $this->parameterBag = $parameterBag;
         $this->utils = $utils;
@@ -69,7 +64,7 @@ class FrontendHyphenator
         // prevent unescape unicode html entities (email obfuscation)
         $strBuffer = preg_replace('/&(#+[x0-9a-fA-F]+);/', '&_$1;', $strBuffer);
 
-        Syllable::setCacheDir(System::getContainer()->getParameter('kernel.cache_dir'));
+        Syllable::setCacheDir($this->parameterBag->get('kernel.cache_dir'));
 
         $languageMapping = Config::get('hyphenator_locale_language_mapping');
 
@@ -122,7 +117,7 @@ class FrontendHyphenator
                 $skipTagCache = [];
                 $skipTagCacheIndex = 0;
 
-                $skipTags = System::getContainer()->getParameter('huh_hyphenator')['skip_tags'];
+                $skipTags =  $this->parameterBag->get('huh_hyphenator')['skip_tags'];
 
                 foreach ($skipTags as $tag) {
                     if (in_array($tag, $this->voidElements)) {
@@ -150,7 +145,7 @@ class FrontendHyphenator
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                 libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                $html = $h->hyphenateHtmlText('<?xml encoding="utf-8" ?>'.$html);
+                $html = $h->hyphenateHtml('<?xml encoding="utf-8" ?>'.$html);
                 libxml_clear_errors();
 
                 // replace skipped tags

@@ -4,9 +4,22 @@ services:
     class: HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator
     public: true
     autowire: true
+    autoconfigure: true
+
   HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator: "@huh.hyphenator.frontend"
 
   huh.hyphenator.frontendPageListener:
     class: HeimrichHannot\HyphenatorBundle\EventListener\FrontendPageListener
     public: true
     autowire: true
+    autoconfigure: true
+    deprecated:
+      message: 'The "%service_id%" service is deprecated.'
+      package: 'heimrichhannot/contao-hyphenator-bundle'
+      version: '1.12'
+
+  HeimrichHannot\HyphenatorBundle\EventListener\:
+    resource: '../../EventListener/*'
+    public: true
+    autowire: true
+    autoconfigure: true
