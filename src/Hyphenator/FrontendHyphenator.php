@@ -9,10 +9,14 @@
 namespace HeimrichHannot\HyphenatorBundle\Hyphenator;
 
 use Contao\Config;
+use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use HeimrichHannot\HyphenatorBundle\Source\File;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Vanderlee\Syllable\Syllable;
@@ -26,18 +30,16 @@ class FrontendHyphenator
      * @var array
      */
     protected $voidElements = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ParameterBag $parameterBag;
+    private Utils $utils;
 
     /**
      * Request constructor.
      */
-    public function __construct(ContainerInterface $container, ParameterBagInterface $parameterBag)
+    public function __construct(ParameterBag $parameterBag, Utils $utils)
     {
-        $this->container = $container;
         $this->parameterBag = $parameterBag;
+        $this->utils = $utils;
     }
 
     public function hyphenate($strBuffer)
@@ -67,7 +69,7 @@ class FrontendHyphenator
         // prevent unescape unicode html entities (email obfuscation)
         $strBuffer = preg_replace('/&(#+[x0-9a-fA-F]+);/', '&_$1;', $strBuffer);
 
-        Syllable::setCacheDir($this->container->getParameter('kernel.cache_dir'));
+        Syllable::setCacheDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
         $languageMapping = Config::get('hyphenator_locale_language_mapping');
 
@@ -120,8 +122,10 @@ class FrontendHyphenator
                 $skipTagCache = [];
                 $skipTagCacheIndex = 0;
 
-                foreach ($this->container->getParameter('huh_hyphenator')['skip_tags'] as $tag) {
-                    if (\in_array($tag, $this->voidElements)) {
+                $skipTags = System::getContainer()->getParameter('huh_hyphenator')['skip_tags'];
+
+                foreach ($skipTags as $tag) {
+                    if (in_array($tag, $this->voidElements)) {
                         $html = preg_replace_callback(
                             '#<\s*?'.$tag.'\b[^>]*>#s',
                             function ($matches) use (&$skipTagCache, $skipTagCacheIndex) {
@@ -146,7 +150,7 @@ class FrontendHyphenator
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                 libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                $html = $h->hyphenateHtml('<?xml encoding="utf-8" ?>'.$html);
+                $html = $h->hyphenateHtmlText('<?xml encoding="utf-8" ?>'.$html);
                 libxml_clear_errors();
 
                 // replace skipped tags
@@ -216,7 +220,7 @@ class FrontendHyphenator
             return false;
         }
 
-        if ($page->pid && null !== ($parent = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_page', $page->pid))) {
+        if ($page->pid && null !== ($parent = $this->utils->model()->findModelInstanceByPk('tl_page', $page->pid))) {
             return $this->isHyphenationDisabled($parent);
         }
 
@@ -241,14 +245,16 @@ class FrontendHyphenator
                 $search = '/';
 
                 // custom user regex whitespace replacement
-                if (isset($exception['replace']) && !empty($exception['replace'])) {
+                if (isset($exception['replace']) && !empty($exception['replace']))
+                {
                     $search .= StringUtil::decodeEntities($exception['search']);
                     $replace = '<span class="text-nowrap">'.StringUtil::restoreBasicEntities($exception['replace']).'</span>';
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '/siU'; // single line and ungreedy
                     $buffer = preg_replace($search, $replace, $buffer);
                 } // default: whitespace replacement
-                else {
+                else
+                {
                     $search .= '('.StringUtil::decodeEntities($exception['search']).')';
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '/siU'; // single line and ungreedy
@@ -260,8 +266,13 @@ class FrontendHyphenator
         }
 
         // always handle root page exceptions
-        if ($page->rootId && $page->id !== $page->rootId && (null !== ($root = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_page', $page->rootId)))) {
-            $buffer = $this->handleLineBreakExceptions($buffer, $root);
+        if ($page->rootId && $page->id !== $page->rootId)
+        {
+            $root = PageModel::findByPk($page->rootId);
+
+            if (null !== $root) {
+                $buffer = $this->handleLineBreakExceptions($buffer, $root);
+            }
         }
 
         return $buffer;
