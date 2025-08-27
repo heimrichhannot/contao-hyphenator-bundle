@@ -12,9 +12,8 @@ use Contao\Config;
 use Contao\PageModel;
 use Contao\StringUtil;
 use HeimrichHannot\HyphenatorBundle\Source\File;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Vanderlee\Syllable\Syllable;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
@@ -26,18 +25,16 @@ class FrontendHyphenator
      * @var array
      */
     protected $voidElements = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ParameterBagInterface $parameterBag;
+    private Utils $utils;
 
     /**
      * Request constructor.
      */
-    public function __construct(ContainerInterface $container, ParameterBagInterface $parameterBag)
+    public function __construct(ParameterBagInterface $parameterBag, Utils $utils)
     {
-        $this->container = $container;
         $this->parameterBag = $parameterBag;
+        $this->utils = $utils;
     }
 
     public function hyphenate($strBuffer)
@@ -67,7 +64,7 @@ class FrontendHyphenator
         // prevent unescape unicode html entities (email obfuscation)
         $strBuffer = preg_replace('/&(#+[x0-9a-fA-F]+);/', '&_$1;', $strBuffer);
 
-        Syllable::setCacheDir($this->container->getParameter('kernel.cache_dir'));
+        Syllable::setCacheDir($this->parameterBag->get('kernel.cache_dir'));
 
         $languageMapping = Config::get('hyphenator_locale_language_mapping');
 
@@ -120,8 +117,10 @@ class FrontendHyphenator
                 $skipTagCache = [];
                 $skipTagCacheIndex = 0;
 
-                foreach ($this->container->getParameter('huh_hyphenator')['skip_tags'] as $tag) {
-                    if (\in_array($tag, $this->voidElements)) {
+                $skipTags =  $this->parameterBag->get('huh_hyphenator')['skip_tags'];
+
+                foreach ($skipTags as $tag) {
+                    if (in_array($tag, $this->voidElements)) {
                         $html = preg_replace_callback(
                             '#<\s*?'.$tag.'\b[^>]*>#s',
                             function ($matches) use (&$skipTagCache, $skipTagCacheIndex) {
@@ -216,7 +215,7 @@ class FrontendHyphenator
             return false;
         }
 
-        if ($page->pid && null !== ($parent = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_page', $page->pid))) {
+        if ($page->pid && null !== ($parent = $this->utils->model()->findModelInstanceByPk('tl_page', $page->pid))) {
             return $this->isHyphenationDisabled($parent);
         }
 
@@ -241,14 +240,16 @@ class FrontendHyphenator
                 $search = '/';
 
                 // custom user regex whitespace replacement
-                if (isset($exception['replace']) && !empty($exception['replace'])) {
+                if (isset($exception['replace']) && !empty($exception['replace']))
+                {
                     $search .= StringUtil::decodeEntities($exception['search']);
                     $replace = '<span class="text-nowrap">'.StringUtil::restoreBasicEntities($exception['replace']).'</span>';
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '/siU'; // single line and ungreedy
                     $buffer = preg_replace($search, $replace, $buffer);
                 } // default: whitespace replacement
-                else {
+                else
+                {
                     $search .= '('.StringUtil::decodeEntities($exception['search']).')';
                     $search .= '(?![^<]*>)'; // ignore html tags
                     $search .= '/siU'; // single line and ungreedy
@@ -260,8 +261,13 @@ class FrontendHyphenator
         }
 
         // always handle root page exceptions
-        if ($page->rootId && $page->id !== $page->rootId && (null !== ($root = $this->container->get('huh.utils.model')->findModelInstanceByPk('tl_page', $page->rootId)))) {
-            $buffer = $this->handleLineBreakExceptions($buffer, $root);
+        if ($page->rootId && $page->id !== $page->rootId)
+        {
+            $root = PageModel::findByPk($page->rootId);
+
+            if (null !== $root) {
+                $buffer = $this->handleLineBreakExceptions($buffer, $root);
+            }
         }
 
         return $buffer;

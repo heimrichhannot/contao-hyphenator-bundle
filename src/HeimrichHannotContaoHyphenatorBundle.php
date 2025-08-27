@@ -9,6 +9,7 @@
 namespace HeimrichHannot\HyphenatorBundle;
 
 use HeimrichHannot\HyphenatorBundle\DependencyInjection\HyphenatorExtension;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class HeimrichHannotContaoHyphenatorBundle extends Bundle
@@ -16,7 +17,7 @@ class HeimrichHannotContaoHyphenatorBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new HyphenatorExtension();
     }

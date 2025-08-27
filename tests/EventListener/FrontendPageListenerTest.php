@@ -23,7 +23,7 @@ class FrontendPageListenerTest extends ContaoTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

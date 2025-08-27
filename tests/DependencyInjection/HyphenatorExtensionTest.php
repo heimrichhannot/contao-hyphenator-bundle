@@ -18,7 +18,7 @@ class HyphenatorExtensionTest extends ContaoTestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $container = new ContainerBuilder(new ParameterBag(['kernel.debug' => false]));
