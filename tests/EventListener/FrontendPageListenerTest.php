@@ -16,21 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FrontendPageListenerTest extends ContaoTestCase
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->container = $this->mockContainer();
-    }
-
-    /**
      * Tests the object instantiation.
      */
     public function testCanBeInstantiated()

@@ -42,7 +42,7 @@ class FrontendHyphenator
         /* @var PageModel $objPage */
         global $objPage;
 
-        if ($this->isHyphenationDisabled($objPage, Config::get('hyphenator_skipPages'))) {
+        if ($this->isHyphenationDisabled($objPage, Config::get('hyphenator_skipPages') ?: [])) {
             return $strBuffer;
         }
 
@@ -74,8 +74,14 @@ class FrontendHyphenator
 
         $rootPath = $this->parameterBag->get('kernel.project_dir');
 
-        $source = new File($language, $rootPath . '/vendor/vanderlee/syllable/languages', [
-            $language => [$GLOBALS['TL_CONFIG']['hyphenator_hyphenedLeftMin'], $GLOBALS['TL_CONFIG']['hyphenator_hyphenedRightMin']],
+        $source = new File(
+            $language,
+            $rootPath . '/vendor/vanderlee/syllable/languages',
+            [
+                $language => [
+                    $GLOBALS['TL_CONFIG']['hyphenator_hyphenedLeftMin'] ?? null,
+                    $GLOBALS['TL_CONFIG']['hyphenator_hyphenedRightMin'] ?? null,
+                ],
         ]);
 
         $h->setSource($source);
@@ -145,7 +151,7 @@ class FrontendHyphenator
 
                 // if html contains nested tags, use the hyphenateHtml that excludes HTML tags and attributes
                 libxml_use_internal_errors(true); // disable error reporting when potential using HTML5 tags
-                $html = $h->hyphenateHtml('<?xml encoding="utf-8" ?>'.$html);
+                $html = $h->hyphenateHtml('<?xml encoding="UTF-8">'.$html);
                 libxml_clear_errors();
 
                 // replace skipped tags
@@ -188,6 +194,13 @@ class FrontendHyphenator
             },
             $strBuffer
         );
+
+        // remove xml tag again
+        $search = '<?xml encoding="UTF-8">';
+        $pos = strpos($strBuffer, $search);
+        if ($pos !== false && $pos < 200) {
+            $strBuffer = substr_replace($strBuffer, '', $pos, strlen($search));
+        }
 
         return $strBuffer;
     }

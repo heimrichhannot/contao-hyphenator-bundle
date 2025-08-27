@@ -12,7 +12,9 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\TestCase\ContaoTestCase;
 use HeimrichHannot\HyphenatorBundle\Hyphenator\FrontendHyphenator;
 use HeimrichHannot\UtilsBundle\Model\ModelUtil;
+use HeimrichHannot\UtilsBundle\Util\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class FrontendHyphenatorTest extends ContaoTestCase
 {
@@ -31,18 +33,13 @@ class FrontendHyphenatorTest extends ContaoTestCase
         if (!\defined('TL_ROOT')) {
             \define('TL_ROOT', $this->getFixturesDir());
         }
-
-        $this->container = $this->mockContainer();
     }
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testCanBeInstantiated()
+    private function createInstance(array $args = [])
     {
-        $listener = new FrontendHyphenator($this->container);
-
-        $this->assertInstanceOf(FrontendHyphenator::class, $listener);
+        $parameterBag = $args['parameterBag'] ?? $this->createMock(ParameterBagInterface::class);
+        $utils = $args['utils'] ?? $this->createMock(Utils::class);
+        return new FrontendHyphenator($parameterBag, $utils);
     }
 
     /**
@@ -50,7 +47,7 @@ class FrontendHyphenatorTest extends ContaoTestCase
      */
     public function testHyphenateWithoutPageContext()
     {
-        $listener = new FrontendHyphenator($this->container);
+        $listener = $this->createInstance();
 
         $this->assertSame('test', $listener->hyphenate('test'));
     }
@@ -62,16 +59,16 @@ class FrontendHyphenatorTest extends ContaoTestCase
      */
     public function testHyphenate($buffer, array $pageData, array $config, $expected)
     {
-        $this->container->set('contao.resource_finder', new ResourceFinder([$this->getFixturesDir().'/vendor/contao/core-bundle/src/Resources/contao']));
-        $this->container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/var/cache');
+//        $this->container->set('contao.resource_finder', new ResourceFinder([$this->getFixturesDir().'/vendor/contao/core-bundle/src/Resources/contao']));
+//        $this->container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/var/cache');
 
-        $modelUtil = $this->createMock(ModelUtil::class);
+//        $modelUtil = $this->createMock(ModelUtil::class);
 
-        $this->container->set('huh.utils.model', $modelUtil);
-        $this->container->setParameter('huh_hyphenator', ['skip_tags' => ['script', 'img']]);
+//        $this->container->set('huh.utils.model', $modelUtil);
+//        $this->container->setParameter('huh_hyphenator', ['skip_tags' => ['script', 'img']]);
 
-        $listener = new FrontendHyphenator($this->container);
-
+        $listener = $this->createInstance();
+//
         global $objPage;
 
         $objPage = (object) $pageData;
