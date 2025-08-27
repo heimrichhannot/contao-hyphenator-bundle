@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.12.0-DEV] - 2025-08-27
+## [1.12.0] - 2025-08-27
 - Changed: add contao 5 support ([#10](https://github.com/heimrichhannot/contao-hyphenator-bundle/pull/10))
 - Fixed: missing support for rootfallback palette in tl_page ([#9](https://github.com/heimrichhannot/contao-hyphenator-bundle/pull/9), [@cgoIT](https://github.com/cgoIT))
+- Fixed: adding invalid xml tag
 
 ## [1.11.4] - 2023-09-07
 - Changed: vanderlee/syllable: correct languages path for any development directory
